@@ -46,14 +46,28 @@ def pad(x,y):
 
 def quadratic_multiply(x, y):
     ### TODO
+    xvec = x.binary_vec
+    yvec = y.binary_vec
+    if  len(xvec) <=1 and len(yvec) <= 1:
+        return x.decimal_val*y.decimal_val
+    xvec, yvec = pad(xvec, yvec)
+    x_left, x_right = split_number(xvec)
+    y_left, y_right = split_number(yvec)
+    xLyL=quadratic_multiply(x_left, y_left)
+    xLyR_xRyL=quadratic_multiply(x_left, y_right)+quadratic_multiply(x_right, y_left)
+    xR_yR=quadratic_multiply(x_right, y_right)
+    res=bit_shift(BinaryNumber(xLyL),len(xvec)).decimal_val+bit_shift(BinaryNumber(xLyR_xRyL),len(xvec)//2).decimal_val+xR_yR
+    return res
     pass
     ###
-
-
 
 ## Feel free to add your own tests here.
 def test_multiply():
     assert quadratic_multiply(BinaryNumber(2), BinaryNumber(2)) == 2*2
+    assert quadratic_multiply(BinaryNumber(1), BinaryNumber(1)) == 1*1
+    assert quadratic_multiply(BinaryNumber(2), BinaryNumber(212)) == 2*212
+    assert quadratic_multiply(BinaryNumber(100), BinaryNumber(100)) == 100*100
+    assert quadratic_multiply(BinaryNumber(7132), BinaryNumber(462)) == 7132*462
     
     
 def time_multiply(x, y, f):
