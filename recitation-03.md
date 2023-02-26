@@ -1,6 +1,6 @@
 # CMPS 2200  Recitation 03
 
-**Name (Team Member 1):**_________________________  
+**Name (Team Member 1):**______Jiayi Xu___________________  
 **Name (Team Member 2):**_________________________
 
 This recitation includes part of assignment 02. 
@@ -54,3 +54,19 @@ The implementation of `_quadratic_multiply` will do the following:
 5. Now you can apply the formula above directly. Anywhere there is a multiply, call `_quadratic_multiply`
 6. Use `bit_shift` to do the $2^n$ and $2^{n/2}$ multiplications.
 7. Finally, you have to do three sums to get the final answer. For this assignment, you can just use the `decimal_val`s of each number to do this, though keep in mind that binary addition is a $O(n)$ operation, assuming $n$ bits per term.
+
+```python
+def quadratic_multiply(x, y):
+    xvec = x.binary_vec
+    yvec = y.binary_vec
+    if  len(xvec) <=1 and len(yvec) <= 1:
+        return x.decimal_val*y.decimal_val
+    xvec, yvec = pad(xvec, yvec)
+    x_left, x_right = split_number(xvec)
+    y_left, y_right = split_number(yvec)
+    xLyL=quadratic_multiply(x_left, y_left)
+    xLyR_xRyL=quadratic_multiply(x_left, y_right)+quadratic_multiply(x_right, y_left)
+    xR_yR=quadratic_multiply(x_right, y_right)
+    res=bit_shift(BinaryNumber(xLyL),len(xvec)).decimal_val+bit_shift(BinaryNumber(xLyR_xRyL),len(xvec)//2).decimal_val+xR_yR
+    return res
+```
